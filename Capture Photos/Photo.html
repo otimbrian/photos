@@ -82,6 +82,9 @@
             imageCapture.takePhoto()
                 .then(
                     blob => {
+                        //We can get this blob and upload it to any online platform and
+                        //Retrieve the url for use later on.
+                        
                         const imageUrl = URL.createObjectURL(blob)
                         console.log(imageUrl)
                         document.querySelector('img').src = imageUrl
