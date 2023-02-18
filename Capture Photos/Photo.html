@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <title>Photo</title>
+</head>
+
+<body>
+    <div class="outer">
+        <div class="video_div">
+            <video autoplay=""></video>
+            <button id="getUserMediaButton">Get User Media</button>
+        </div>
+        <div class="photo_div">
+            <img src="" alt="Photo Taken">
+            <!-- <canvas id="takePhotoCanvas"></canvas> -->
+            <button id="takePhotoButton">Take Photo</button>
+        </div>
+    </div>
+</body>
+
+<style>
+    .outer {
+        justify-content: space-around;
+        display: flex;
+        width: 100%;
+
+    }
+
+    .video_div {
+        background-color: blueviolet;
+        width: 50%;
+        /* float: left; */
+        height: 400px;
+
+    }
+
+    .photo_div {
+        background-color: aquamarine;
+        width: 50%;
+        /* float: right; */
+        height: 400px;
+    }
+</style>
+
+<footer>
+    <script>
+        const videoButton = document.querySelector('#getUserMediaButton')
+        videoButton.addEventListener(
+            "click", () => {
+                onGetUserMediaButtonClick()
+            }
+        )
+
+        const photoButton = document.querySelector('#takePhotoButton')
+        photoButton.addEventListener(
+            "click", () => {
+                console.log("Taking photo.............")
+                onTakePhotoButtonClick()
+            }
+        )
+
+
+
+        //The video stream before taking the photo.
+        function onGetUserMediaButtonClick() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(mediaStream => {
+                    document.querySelector('video').srcObject = mediaStream;
+
+                    const track = mediaStream.getVideoTracks()[0];
+                    imageCapture = new ImageCapture(track);
+                })
+                .catch(error => ChromeSamples.log(error));
+        }
+
+        //Taking Photo thats comming from the video stream.
+        function onTakePhotoButtonClick() {
+            imageCapture.takePhoto()
+                .then(
+                    blob => {
+                        const imageUrl = URL.createObjectURL(blob)
+                        console.log(imageUrl)
+                        document.querySelector('img').src = imageUrl
+                    }
+                )
+                // .then(
+                //     blob => createImageBitmap(blob)
+                // )
+                // .then(imageBitmap => {
+                //     const canvas = document.querySelector('#takePhotoCanvas');
+                //     drawCanvas(canvas, imageBitmap);
+                // })
+                .catch(error => ChromeSamples.log(error));
+        }
+
+        /* Utils */
+
+        function drawCanvas(canvas, img) {
+            canvas.width = getComputedStyle(canvas).width.split('px')[0];
+            canvas.height = getComputedStyle(canvas).height.split('px')[0];
+            let ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
+            let x = (canvas.width - img.width * ratio) / 2;
+            let y = (canvas.height - img.height * ratio) / 2;
+            canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+            canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height,
+                x, y, img.width * ratio, img.height * ratio);
+        }
+
+
+    </script>
+</footer>
+
+</html>
