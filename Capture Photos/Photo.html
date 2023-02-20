@@ -18,6 +18,7 @@
             <img src="" alt="Photo Taken">
             <!-- <canvas id="takePhotoCanvas"></canvas> -->
             <button id="takePhotoButton">Take Photo</button>
+            <button id ="Save photo">Save Photo</button>
         </div>
     </div>
 </body>
@@ -66,6 +67,7 @@
 
 
         //The video stream before taking the photo.
+        //This Streams the live video while the user finds the perfect position.
         function onGetUserMediaButtonClick() {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(mediaStream => {
@@ -78,6 +80,7 @@
         }
 
         //Taking Photo thats comming from the video stream.
+        // This takes the photo and gets the url to didplay the image to the user.
         function onTakePhotoButtonClick() {
             imageCapture.takePhoto()
                 .then(
